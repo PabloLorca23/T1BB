@@ -1,0 +1,54 @@
+
+<ul>
+    <div class="w3_search">
+        <form action="/bbAPI/buscar/" method="post">
+        {% csrf_token %}
+            <input type="text" id= "buscar" name="buscar" placeholder="Personaje a buscar" autofocus required>
+            <input type="submit" value="Buscar Personaje">
+        </form>
+    </div>
+    <h2> {{personaje}}</h2>
+    {% if personaje != "Personajes con nombres similares" %}
+        {% for persona in p %}
+            <img src= {{persona.img}} width="200" height="240">
+            <li>Apodo: {{persona.nickname}}</li>
+            <li>Ocupación: </li>
+            <ul>
+                {% for o in persona.occupation %}
+                    <li>{{o}}</li>
+                {% endfor %}
+            </ul>
+            <li>Estado actual: {{persona.status}}</li>
+            <li>Interpretado por: {{persona.portrayed}}</li>
+            <li>Frases célebres:</li>
+            <ul>
+                {% for cita in q %}
+                    <li>{{cita.quote}}</li>
+                {% endfor %}
+            </ul>
+            {% for s in persona.category %}
+                <li>Apariciones en {{s}}</li>
+                {% if s == "Breaking Bad" %}
+                <ul>
+                    {% for a in persona.appearance %}
+                    <li><a href="/bbAPI/bb/{{ a }}/">Temporada {{ a }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <ul>
+                    {% for a in persona.better_call_saul_appearance %}
+                    <li><a href="/bbAPI/bcs/{{ a }}/">Temporada {{ a }}</a></li>
+                    {% endfor %}
+                </ul>      
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+    {% else %}
+        {% for persona in p %}
+        <li> <a href="/bbAPI/{{ persona.name }}/"> {{persona.name}} </a></li>
+        {% endfor %}
+    {% endif %}
+    
+    
+</ul>
